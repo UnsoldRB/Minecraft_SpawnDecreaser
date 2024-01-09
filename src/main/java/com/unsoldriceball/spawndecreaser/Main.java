@@ -40,6 +40,7 @@ public class Main {
     @SubscribeEvent
     public void WhenSpawn(CheckSpawn event)
     {
+        if (event.getWorld().isRemote) return;
         Entity target = event.getEntity();
         String id_raw = EntityList.getKey(target).toString();
         String id[] = id_raw.split(":", 2);
