@@ -11,15 +11,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 
 
 
-@Mod(modid = Main.MOD_ID, acceptableRemoteVersions = "*")
-public class Main
+@Mod(modid = SDMain.ID_MOD, acceptableRemoteVersions = "*")
+public class SDMain
 {
-    public static final String MOD_ID = "spawndecreaser";
+    public static final String ID_MOD = "spawndecreaser";
     private static final String ABYSSAL_ID = "abyssalcraft";
     private static final String  ABYSSALZOMBIE_ID = "abyssalcraft:abyssalzombie";
     private static final String MOCREATURES_ID = "mocreatures";
@@ -55,11 +56,11 @@ public class Main
         if (!event.getWorld().isRemote)
         {
             final Entity L_TARGET = event.getEntity();
-            final String L_ID_RAW = EntityList.getKey(L_TARGET).toString();
-            final String L_ID[] = L_ID_RAW.split(":", 2);
+            final String L_ID_RAW = Objects.requireNonNull(EntityList.getKey(L_TARGET)).toString();
+            final String[] L_ID = L_ID_RAW.split(":", 2);
             final World L_WOR = L_TARGET.world;
             final String L_DIM = L_WOR.provider.getDimensionType().getName();
-            final String L_BIO[] = L_WOR.getBiome(L_TARGET.getPosition()).getRegistryName().toString().split(":", 2);
+            final String[] L_BIO = L_WOR.getBiome(L_TARGET.getPosition()).getRegistryName().toString().split(":", 2);
 
 
             //対象がAbyssalZombieなら
@@ -70,7 +71,7 @@ public class Main
                 {
                     //対象のディメンションがmodで追加されたものなら
                     if (Arrays.asList(ABYSSAL_DIM).contains(L_DIM)) return;
-                    if (Random(18)) return;
+                    if (Random(SDConfig.probability_AbyssalCraft)) return;
                     event.setResult(Event.Result.DENY);
                 }
 
@@ -78,13 +79,13 @@ public class Main
             //対象がMoCreaturesで追加されたmobなら
             else if (L_ID[0].equals(MOCREATURES_ID))
             {
-                if (Random(1536)) return;
+                if (Random(SDConfig.probability_MoCreatures)) return;
                 event.setResult(Event.Result.DENY);
             }
             //対象がBetterSlimesで追加されたmobなら
             else if (L_ID[0].equals(BETTERSLIMES_ID))
             {
-                if (Random(1024)) return;
+                if (Random(SDConfig.probability_BetterSlimes)) return;
                 event.setResult(Event.Result.DENY);
             }
             //対象がTakumiCraftで追加されたmobなら
@@ -95,7 +96,7 @@ public class Main
                 {
                     //対象のディメンションがmodで追加されたものなら
                     if (L_DIM.equals(TAKUMI_DIM)) return;
-                    if (Random(1)) return;
+                    if (Random(SDConfig.probability_TakumiCraft)) return;
                     event.setResult(Event.Result.DENY);
                 }
             }
